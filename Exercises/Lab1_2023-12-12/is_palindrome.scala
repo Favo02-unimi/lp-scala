@@ -1,7 +1,7 @@
 def is_palindrome(s : String) : Boolean = {
   val filtered = s
     .toLowerCase
-    .filter(c => (c >= 'a') && (c <= 'z'))
+    .filter(c => 'a' <= c && c <= 'z')
   filtered.reverse == filtered
 }
 
