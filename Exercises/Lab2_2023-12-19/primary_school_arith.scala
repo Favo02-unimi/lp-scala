@@ -1,4 +1,4 @@
-// scala -classpath "*.jar:dependencies/*.jar" JSON.scala
+// scala -classpath "*.jar:dependencies/*.jar" primary_school_arith.scala primary_school_arith1.in primary_school_arith2.in primary_school_arith3.in
 
 import scala.util.parsing.combinator._
 import java.io.FileReader
@@ -9,7 +9,8 @@ class ArithParser extends JavaTokenParsers {
 
   def firstline = num
   def line = ("+" | "-") ~ num
-  def result = "=" ~> rep("-") ~> num
+  def result = "=" ~> """[-]+""".r ~> num
+  // "=" ~> rep("-") ~> num doesnt work with negative results (the - of the number is parsed by the rep)
 
   def operations = firstline ~ rep(line) ^^ {
     case (num: String) ~ (ops: List[String~String]) =>
@@ -31,5 +32,8 @@ class ArithParser extends JavaTokenParsers {
 
 object ParseArith extends ArithParser {
   def main(args: Array[String]) =
-    println(parseAll(arith, new FileReader(args(0))))
+    args.foreach(file => {
+      println("---")
+      println(parseAll(arith, new FileReader(file)))
+    })
 }
