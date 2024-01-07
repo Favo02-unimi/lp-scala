@@ -1,4 +1,4 @@
-// scala -classpath "*.jar:dependencies/*.jar" primary_school_arith.scala primary_school_arith1.in primary_school_arith2.in primary_school_arith3.in
+// scala -classpath "../*:dependencies/*.jar" primary_school_arith.scala primary_school_arith1.in primary_school_arith2.in primary_school_arith3.in
 
 import scala.util.parsing.combinator._
 import java.io.FileReader
@@ -22,10 +22,7 @@ class ArithParser extends JavaTokenParsers {
 
   def arith = operations ~ result ^^ {
     case (operations: Int) ~ (result: String) => {
-      println("Operations result:", operations)
-      println("Result:", result.toInt)
-      println("Valid:", operations == result.toInt)
-      operations == result.toInt
+      (operations, result.toInt)
     }
   }
 }
@@ -34,6 +31,12 @@ object ParseArith extends ArithParser {
   def main(args: Array[String]) =
     args.foreach(file => {
       println("---")
-      println(parseAll(arith, new FileReader(file)))
+      parseAll(arith, new FileReader(file)) match {
+        case Success((ops, res), _) =>
+          println("Operations result:", ops)
+          println("Result:", res)
+          println("Valid:", ops == res)
+        case x => print(x.toString)
+      }
     })
 }
